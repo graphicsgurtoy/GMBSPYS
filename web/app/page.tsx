@@ -18,7 +18,7 @@ export default function Home() {
         </div>
 
         <nav>
-          <a className="active" href="#">
+          <a className="active" href="/">
             🏠 <span>Dashboard</span>
           </a>
           <a href="#">
@@ -513,3 +513,4 @@ export default function Home() {
     </main>
   );
 }
+
