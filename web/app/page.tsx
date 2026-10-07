@@ -21,16 +21,16 @@ export default function Home() {
           <a className="active" href="/">
             🏠 <span>Dashboard</span>
           </a>
-          <a href="#">
+          <a href="/businesses">
             🏢 <span>Businesses</span>
           </a>
-          <a href="#">
+          <a href="/businesses">
             🎯 <span>Leads</span>
           </a>
-          <a href="#">
+          <a href="/businesses">
             🔎 <span>Searches</span>
           </a>
-          <a href="#">
+          <a href="/businesses">
             ⚙️ <span>Settings</span>
           </a>
         </nav>
@@ -513,4 +513,5 @@ export default function Home() {
     </main>
   );
 }
+
 
