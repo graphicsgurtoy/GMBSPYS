@@ -4,7 +4,7 @@
   { title: "Business CRM", desc: "Business records, customers and workspace management.", href: "/businesses" },
   { title: "Analytics", desc: "Open the current dashboard and review available metrics.", href: "/admin" },
   { title: "Workspace Settings", desc: "Review current application settings.", href: "/settings" },
-  { title: "Legacy CRM", desc: "Existing PHP source is preserved in legacy-crm for staged API migration.", href: "/guides/getting-started" },
+  { title: "GrowReview CRM", desc: "GrowReview CRM integration: connect authenticated APIs and migrate existing CRM workflows before production use.", href: "/guides/getting-started" },
 ];
 
 export default function DashboardPage() {
@@ -30,3 +30,4 @@ export default function DashboardPage() {
     </main>
   );
 }
+
