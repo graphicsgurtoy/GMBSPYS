@@ -1,1 +1,23 @@
-{"name":"monkeymind-gmb-web","private":true,"version":"0.1.0","scripts":{"dev":"next dev","build":"next build","start":"next start","lint":"next lint"},"dependencies":{"@supabase/ssr":"latest","@supabase/supabase-js":"latest","next":"latest","react":"latest","react-dom":"latest"},"devDependencies":{"@types/node":"26.6.4","@types/react":"19.3.0","typescript":"7.0.2"}}
+{
+  "name": "monkeymind-gmb-web",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@supabase/ssr": "latest",
+    "@supabase/supabase-js": "latest",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.4",
+    "@types/react": "19.3.0",
+    "typescript": "7.0.2"
+  }
+}
