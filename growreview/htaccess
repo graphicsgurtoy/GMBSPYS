@@ -1,0 +1,48 @@
+Options -Indexes
+RewriteEngine On
+
+# Protect sensitive files
+<FilesMatch "^(\.env|\.gitignore|composer\.(json|lock)|README\.md)$">
+  Require all denied
+</FilesMatch>
+
+# Clean application routes
+RewriteRule ^r/([a-z0-9-]+)/?$ /r/index.html [L,QSA,NC]
+RewriteRule ^app/?$ /app/index.html [L,QSA,NC]
+RewriteRule ^blog/([a-z0-9-]+)/?$ /blog/index.html?slug=$1 [L,QSA,NC]
+RewriteRule ^super-admin/?$ /super-admin/index.html [L,QSA,NC]
+RewriteRule ^setup/?$ /setup.html [L,QSA,NC]
+
+# Security headers
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# Cache static assets
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+</IfModule>
+
+# Performance compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+# Do not let Hostinger/CDN keep stale HTML after deployments
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html|php)$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(css|js|png|jpg|jpeg|webp|svg)$">
+    Header set Cache-Control "public, max-age=604800"
+  </FilesMatch>
+</IfModule>

@@ -1,0 +1,5 @@
+<?php
+require_once __DIR__ . '/../bootstrap.php';require_method('POST');$u=require_auth(['super_admin']);require_csrf();$d=request_json();
+$bid=(int)($d['business_id']??0);$summary=trim((string)($d['summary']??''));$when=trim((string)($d['scheduled_at']??''));$cta=trim((string)($d['cta_url']??''));$image=trim((string)($d['image_url']??''));if(!$bid||$summary===''||$when==='')json_response(['ok'=>false,'error'=>'Business, post text and scheduled date/time are required'],422);
+try{$dt=new DateTime($when);$scheduled=$dt->format('Y-m-d H:i:s');}catch(Throwable $e){json_response(['ok'=>false,'error'=>'Invalid scheduled date/time'],422);} $payload=['summary'=>$summary,'cta_url'=>$cta,'image_url'=>$image];
+$st=db()->prepare("INSERT INTO gmb_content_jobs(business_id,content_type,title,payload_json,status,scheduled_at) VALUES(?,'post',?,?, 'scheduled',?)");$st->execute([$bid,mb_substr($summary,0,180),json_encode($payload,JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES),$scheduled]);audit((int)$u['id'],$bid,'gmb_post_scheduled',['scheduled_at'=>$scheduled]);json_response(['ok'=>true,'job_id'=>(int)db()->lastInsertId(),'scheduled_at'=>$scheduled]);

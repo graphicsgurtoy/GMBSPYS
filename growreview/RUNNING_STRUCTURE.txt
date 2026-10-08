@@ -1,0 +1,54 @@
+GrowReview CRM V5
+=================
+
+public_html/
+├── index.html                         Marketing website
+├── setup.html                         First Super Admin setup
+├── .env                               Private runtime credentials
+├── .htaccess                          Routes + security + caching
+├── app/index.html                     Client CRM
+├── super-admin/index.html             Master GrowReview CRM
+├── r/index.html                       Dynamic public business/QR page
+├── blog/index.html                    Public blog reader
+├── assets/
+│   ├── css/landing.css                Marketing website
+│   ├── css/public.css                 QR/business page
+│   ├── css/portal.css                 Admin/CRM
+│   └── js/
+│       ├── api.js
+│       ├── landing.js
+│       ├── public.js
+│       ├── app-admin.js
+│       └── super-admin.js
+├── api/
+│   ├── public/homepage.php            Homepage clients/reviews/blogs
+│   ├── public/blog.php
+│   ├── super/dashboard.php            Fast one-request admin overview
+│   ├── super/reviews.php
+│   ├── blogs/
+│   ├── testimonials/
+│   ├── businesses/
+│   ├── reviews/
+│   ├── staff/
+│   ├── forms/
+│   ├── analytics/
+│   ├── gmb/
+│   │   ├── workspace/services.php
+│   │   ├── workspace/products.php
+│   │   ├── workspace/assets.php
+│   │   ├── workspace/audit.php
+│   │   ├── workspace/save-job.php
+│   │   └── Google API endpoints
+│   └── cron/publish-scheduled.php
+└── database/
+    ├── schema.sql                     Fresh installation
+    └── upgrade-v5.sql                 Existing DB upgrade
+
+BEST UPDATE ORDER FOR YOUR CURRENT HOSTINGER SITE
+1. Backup existing DB.
+2. Import upgrade-v5.sql.
+3. Upload/overwrite V5 files.
+4. Do not overwrite .env.
+5. Clear Hostinger/CDN cache.
+6. Test /api/health.php.
+7. Open /super-admin.

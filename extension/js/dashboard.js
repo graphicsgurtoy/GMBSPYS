@@ -1,7 +1,146 @@
-function capitalizeFirstLetter(a){return a.charAt(0).toUpperCase()+a.slice(1)}var table=newTabulator("#example-table",{layout:"fitData",placeholder:"Loading",selectable:1,downloadConfig:{undefinedString:""}});
-document.getElementById("download-csv").addEventListener("click",function(){rolecheck().then(function(a){const b=a.quota||0;var d=a.used||0;if(d<b){table.download("csv","results.csv");const c=table.getRows().length;console.log(`download ${c} emails.`);updateuse(c);d+=c;document.getElementById("accountinfo").innerHTML=`Current Plan: ${a.plan}, Quota: ${b}, Used: ${d}`}else alert("Download Quota Used UP, Please Upgrade your plan."),upgradeToPro()}).catch(a=>{console.log(a)})});
-document.getElementById("download-xlsx").addEventListener("click",function(){rolecheck().then(function(a){const b=a.quota||0;var d=a.used||0;if(d<b){table.download("xlsx","results.xlsx",{sheetName:"My Data"});const c=table.getRows().length;console.log(`download ${c} emails.`);updateuse(c);d+=c;document.getElementById("accountinfo").innerHTML=`Current Plan: ${a.plan}, Quota: ${b}, Used: ${d}`}else alert("Download Quota Used UP, Please Upgrade your plan."),upgradeToPro()}).catch(a=>{console.log(a)})});
-function flattenObject(a,b=""){const d={};for(const [c,e]of Object.entries(a))a=b?`${b}_${c}`:c,"object"===typeof e&&null!==e?Object.assign(d,flattenObject(e,a)):d[a]=null===e?"":e;return d}
-function generateColumns(a){const b=new Set("name phone address email website averageRating ratingCount category longitude latitude cid place_id instagram facebook twitter linkedin youtube profileURL".split(" "));var d=[];b.forEach(c=>{d.push({title:capitalizeFirstLetter(c),field:c,width:300,resizable:!0})});Array.from(a).sort().forEach(c=>{b.has(c)||d.push({title:capitalizeFirstLetter(c),field:c,width:300,resizable:!0})});table.setColumns(d)}
-function showData(){chrome.storage.local.get(null,function(a){a=a.leads||[];for(var b=new Set,d=[],c=0;c<a.length;++c){const e=flattenObject(a[c]);d.push(e);Object.keys(e).forEach(f=>b.add(f))}generateColumns(b);table.setData(d)})}function normalizeProfileId(a){return a.replace("@","").trim().toLowerCase()}
-$(document).ready(function(){showData();chrome.storage.sync.get(null,function(a){a.uid&&rolecheck().then(function(b){if(0!==Object.keys(b).length){document.getElementById("accountinfo").innerHTML=`Current Plan: ${b.plan}, Quota: ${b.quota}, Used: ${b.used}`;var d=b.quota-b.used;"Free"==b.plan||0>=d?document.getElementById("upgradebtn").style.display="block":document.getElementById("upgradebtn").style.display="None"}})})});document.getElementById("upgradebtn").addEventListener("click",function(){upgradeToPro()});
+﻿var table;
+
+function flattenObject(obj, prefix = "", result = {}) {
+    for (const key of Object.keys(obj || {})) {
+        const value = obj[key];
+        const newKey = prefix ? prefix + "." + key : key;
+
+        if (value && typeof value === "object" && !Array.isArray(value)) {
+            flattenObject(value, newKey, result);
+        } else {
+            result[newKey] = Array.isArray(value)
+                ? value.join(", ")
+                : value == null ? "" : value;
+        }
+    }
+    return result;
+}
+
+async function getGMBSPYSUser() {
+    const session = await GMBSPYS_AUTH.getSession();
+
+    if (!session?.access_token) {
+        throw new Error("Please login to GMBSPYS first.");
+    }
+
+    let user = await GMBSPYS_AUTH.getUser();
+
+    if (!user && session.refresh_token) {
+        await GMBSPYS_AUTH.refreshSession();
+        user = await GMBSPYS_AUTH.getUser();
+    }
+
+    if (!user) {
+        throw new Error("Session expired. Please login again.");
+    }
+
+    return user;
+}
+
+function showAccount(user) {
+    const el = document.getElementById("accountinfo");
+    if (el) el.textContent = "Logged in as: " + (user.email || "GMBSPYS User");
+
+    const upgrade = document.getElementById("upgradebtn");
+    if (upgrade) upgrade.style.display = "none";
+}
+
+async function showData() {
+    try {
+        const stored = await chrome.storage.local.get([
+            "gmb_scraper_leads",
+            "leads"
+        ]);
+
+        let leads = [];
+
+        const saved = stored.gmb_scraper_leads;
+
+        if (Array.isArray(saved)) {
+            leads = saved;
+        } else if (saved && Array.isArray(saved.leads)) {
+            leads = saved.leads;
+        }
+
+        if (!leads.length && Array.isArray(stored.leads)) {
+            leads = stored.leads;
+        }
+
+        const rows = leads.map(item => flattenObject(item));
+        const columnsSet = new Set();
+
+        rows.forEach(row => Object.keys(row).forEach(key => columnsSet.add(key)));
+
+        const columns = Array.from(columnsSet).map(key => ({
+            title: key,
+            field: key,
+            headerSort: true,
+            tooltip: true
+        }));
+
+        table.setColumns(columns);
+        table.setData(rows);
+
+        console.log("GMBSPYS: Loaded leads:", rows.length);
+
+        if (!rows.length) {
+            console.warn("No saved leads found in extension storage.");
+        }
+    } catch (error) {
+        console.error("Could not load saved leads:", error);
+        alert("Could not load leads. Check the extension Console.");
+    }
+}
+
+async function downloadData(format) {
+    try {
+        await getGMBSPYSUser();
+
+        const rows = table.getData();
+
+        if (!rows.length) {
+            alert("No leads loaded. Return to Google Maps and click Export Results again.");
+            return;
+        }
+
+        if (format === "xlsx") {
+            table.download("xlsx", "gmbspys-results.xlsx", {
+                sheetName: "GMBSPYS Leads"
+            });
+        } else {
+            table.download("csv", "gmbspys-results.csv");
+        }
+    } catch (error) {
+        console.error("Export error:", error);
+        alert(error.message || "Export failed.");
+    }
+}
+
+document.addEventListener("DOMContentLoaded", async function () {
+    table = new Tabulator("#example-table", {
+        data: [],
+        columns: [],
+        layout: "fitDataStretch",
+        placeholder: "No data available",
+        downloadConfig: {
+            columnHeaders: true
+        }
+    });
+
+    table.on("tableBuilt", showData);
+
+    document.getElementById("download-csv")?.addEventListener(
+        "click", () => downloadData("csv")
+    );
+
+    document.getElementById("download-xlsx")?.addEventListener(
+        "click", () => downloadData("xlsx")
+    );
+
+    try {
+        const user = await getGMBSPYSUser();
+        showAccount(user);
+    } catch (error) {
+        console.warn("GMBSPYS authentication:", error.message);
+    }
+});

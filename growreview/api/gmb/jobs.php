@@ -1,0 +1,2 @@
+<?php
+require_once __DIR__ . '/../bootstrap.php';require_auth(['super_admin']);$bid=(int)($_GET['business_id']??0);$sql='SELECT id,business_id,content_type,title,status,scheduled_at,published_at,error_message,created_at FROM gmb_content_jobs';$args=[];if($bid){$sql.=' WHERE business_id=?';$args[]=$bid;}$sql.=' ORDER BY created_at DESC LIMIT 100';$st=db()->prepare($sql);$st->execute($args);json_response(['ok'=>true,'jobs'=>$st->fetchAll()]);

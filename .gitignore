@@ -11,3 +11,42 @@ Thumbs.db
 .idea/
 *.log
 .supabase/
+
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+**/env
+**/env.*
+**/.env
+**/.env.*
+
+# Dependencies and build output
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+
+# Local logs and OS files
+*.log
+.DS_Store
+Thumbs.db
+
+# Local backups and archives
+*.bak
+*.before-cleanup.bak
+web-backup-*/
+GMBSPYS-*.zip
+
+# Legacy CRM local configuration
+legacy-crm/env
+legacy-crm/.env
+
+# Generated build artifacts
+web/tsconfig.tsbuildinfo
+web/.next/
+web/node_modules/
+.vercel/
+

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f6f8fc">
+  <title>GrowReview Super Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/portal.css?v=5.0.0">
+</head>
+<body>
+  <div id="loginView" class="auth-bg">
+    <main class="auth-card">
+      <div class="gr-word">GrowReview</div><span class="pill">SUPER ADMIN</span>
+      <h1>Control Center</h1><p>Manage every GrowReview client and GMB workflow from one place.</p>
+      <form id="loginForm"><label>Email<input type="email" name="email" required autocomplete="username"></label><label>Password<input type="password" name="password" required autocomplete="current-password"></label><button class="primary">Sign In</button></form>
+      <div id="loginMsg" class="msg"></div><a href="/setup">First-time setup</a>
+    </main>
+  </div>
+
+  <div id="dashboard" class="shell hidden">
+    <aside class="side" id="sideNav">
+      <div class="side-head"><div class="gr-word">GrowReview</div><button id="closeNav" class="icon-btn">×</button></div>
+      <nav>
+        <button class="nav-btn active" data-view="overview"><span>◫</span>Overview</button>
+        <div class="nav-label">CLIENTS</div>
+        <button class="nav-btn" data-view="businesses"><span>◎</span>Clients</button>
+        <button class="nav-btn" data-view="create"><span>＋</span>Add Business</button>
+        <button class="nav-btn" data-view="reviews"><span>★</span>Reviews</button>
+        <button class="nav-btn" data-view="blogs"><span>▤</span>Blogs</button>
+        <div class="nav-label">GMB GROWTH</div>
+        <button class="nav-btn" data-view="rank"><span>↗</span>Local Rank AI</button>
+        <button class="nav-btn" data-view="posts"><span>✦</span>AI Google Posts</button>
+        <button class="nav-btn" data-view="photos"><span>▣</span>Photo Manager</button>
+        <button class="nav-btn" data-view="services"><span>≡</span>Services Manager</button>
+        <button class="nav-btn" data-view="products"><span>◇</span>Product Studio</button>
+        <button class="nav-btn" data-view="replies"><span>↩</span>Review Reply AI</button>
+        <button class="nav-btn" data-view="scheduler"><span>◴</span>Auto Scheduler</button>
+      </nav>
+      <div class="side-foot"><button id="logoutBtn" class="secondary">Logout</button></div>
+    </aside>
+    <div id="navBackdrop" class="nav-backdrop"></div>
+
+    <main class="main">
+      <header class="top">
+        <div class="top-title"><button id="openNav" class="mobile-menu">☰</button><div><div class="kicker">GROWREVIEW / SUPER ADMIN</div><h1 id="pageTitle">Overview</h1></div></div>
+        <div class="top-actions"><a class="secondary" href="/app">Client CRM</a><button class="primary" id="quickAdd">+ Add Business</button></div>
+      </header>
+      <section id="content" aria-live="polite"></section>
+    </main>
+  </div>
+
+  <div id="qrModal" class="modal hidden"><div class="modal-card qr-modal-card"><div class="modal-top"><h2>Business QR</h2><button class="close" onclick="qrModal.classList.add('hidden')">✕</button></div><div id="qrBox" class="qr-box"></div><p id="qrUrl" class="qr-url"></p><div class="modal-actions"><button class="secondary" onclick="navigator.clipboard.writeText(qrUrl.textContent)">Copy URL</button><button class="primary" onclick="downloadQR()">Download PNG</button></div></div></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="/assets/js/api.js?v=5.0.0"></script>
+  <script src="/assets/js/super-admin.js?v=5.0.0"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+<?php
+require_once __DIR__ . '/../bootstrap.php';require_once __DIR__.'/_google.php';require_method('POST');$u=require_auth(['super_admin']);require_csrf();$d=request_json();
+$bid=(int)($d['business_id']??0);$review=trim((string)($d['review_id']??''));$comment=trim((string)($d['comment']??''));if(!$bid||$review===''||$comment==='')json_response(['ok'=>false,'error'=>'Business, review ID and reply are required'],422);
+$c=db()->prepare('SELECT account_id,location_id FROM gmb_connections WHERE business_id=? AND is_enabled=1');$c->execute([$bid]);$conn=$c->fetch();if(!$conn)json_response(['ok'=>false,'error'=>'Connect this business to Google first'],422);$account=preg_replace('/[^0-9]/','',(string)$conn['account_id']);$location=preg_replace('/[^0-9]/','',(string)$conn['location_id']);
+try{$r=gbp_request('PUT',"https://mybusiness.googleapis.com/v4/accounts/{$account}/locations/{$location}/reviews/".rawurlencode($review).'/reply',['comment'=>$comment]);audit((int)$u['id'],$bid,'gmb_review_replied',['review_id'=>$review]);json_response(['ok'=>true,'result'=>$r]);}catch(Throwable $e){json_response(['ok'=>false,'error'=>$e->getMessage()],502);}

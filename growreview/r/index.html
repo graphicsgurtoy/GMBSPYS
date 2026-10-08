@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffffff"><title>GrowReview</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="/assets/css/public.css?v=5.0.0"></head>
+<body>
+<div id="loading" class="load-screen"><div class="loader-logo">GrowReview</div><span>Loading business experience…</span></div>
+<main id="publicApp" class="public-app hidden">
+  <div class="public-shell">
+    <header class="micro-top"><a class="gr-wordmark" href="/">GrowReview</a><span class="secure-chip">⌾ Secure</span></header>
+
+    <section class="biz-hero">
+      <div id="banner" class="biz-cover"><div class="cover-shine"></div></div>
+      <div class="identity-row"><div id="logo" class="biz-logo">GR</div><div class="identity-copy"><span id="category" class="biz-kicker"></span><h1 id="businessName">Business</h1><p id="businessMeta">Connect, review and stay in touch.</p></div><a id="profileLink" class="live-profile hidden" target="_blank">Live profile ↗</a></div>
+      <div class="google-line"><i></i><i></i><i></i><i></i></div>
+    </section>
+
+    <section id="googleReviewCard" class="review-cta" tabindex="0" role="button"><div class="g-icon">G</div><div><span>GOOGLE REVIEW</span><h2>Share your experience</h2><p>Open the official review page in one tap</p></div><b>↗</b></section>
+
+    <section class="connect-section"><div class="section-intro"><span>CONNECT</span><h2>Everything you need, one tap away.</h2><p>Choose the action you want to take with this business.</p></div><div id="actions" class="action-grid"></div></section>
+
+    <section class="review-machine">
+      <div class="machine-head"><div><span class="rainbow-label">GROWREVIEW AI</span><h2>Write a better review in under a minute.</h2><p id="businessContext">We use the business category and your real feedback to improve the wording.</p></div><div class="ai-cube">✦ AI</div></div>
+      <div class="step-strip"><button class="review-step active" data-step="1"><b>1</b><span>Staff</span></button><button class="review-step" data-step="2"><b>2</b><span>Highlights</span></button><button class="review-step" data-step="3"><b>3</b><span>Your note</span></button></div>
+      <div class="form-grid compact-grid"><label class="field"><span>Who assisted you?</span><select id="staffSelect"><option value="">Select staff member</option></select></label><label class="field"><span>Review language</span><select id="language"><option value="english">English</option><option value="hinglish">Hinglish</option><option value="hindi">Hindi</option><option value="punjabi">Punjabi</option><option value="punglish">Punglish</option></select></label></div>
+      <div class="micro-label">WHAT STOOD OUT?</div><div id="tags" class="tags"></div>
+      <label class="field full feedback-field"><span>Add a short note <em>optional if you selected highlights</em></span><textarea id="feedback" maxlength="700" placeholder="Example: The staff explained everything clearly and the service was smooth."></textarea><small id="feedbackCount">0 / 700</small></label>
+      <button id="generate" class="rainbow-btn"><span>✦</span> Generate My Review</button><div id="reviewMsg" class="message"></div>
+      <div id="draft" class="draft hidden"><div class="draft-top"><strong>YOUR REVIEW DRAFT</strong><span id="wordCount"></span></div><p id="draftText"></p><div class="draft-actions"><button id="copyDraft">Copy review</button><button id="regenerateDraft">↻ New version</button><button id="continueGoogle" class="black">Continue to Google</button></div></div>
+    </section>
+
+    <section id="customerSection" class="form-card"><div class="form-title-row"><div><span class="rainbow-label">CUSTOMER CONNECT</span><h2>Stay connected</h2></div><div class="privacy-chip">Private to this business</div></div><p>Save your details for future offers, service updates or follow-ups.</p><div class="form-grid"><label class="field"><span>Name *</span><input id="custName" autocomplete="name"></label><label class="field"><span>Phone *</span><input id="custPhone" inputmode="tel" autocomplete="tel"></label><label class="field"><span>Email</span><input id="custEmail" type="email" autocomplete="email"></label><label class="field"><span>City</span><input id="custCity" autocomplete="address-level2"></label></div><label class="field full"><span>Anything else?</span><textarea id="custNotes" placeholder="Optional note"></textarea></label><label class="consent"><input id="consent" type="checkbox"> I agree to receive relevant updates from this business.</label><button id="submitForm" class="rainbow-btn">Submit Details</button><div id="formMsg" class="message"></div></section>
+
+    <footer><span>Powered by</span><strong>GrowReview</strong><small>Local Reputation & Customer Growth OS</small></footer>
+  </div>
+</main>
+<script src="/assets/js/public.js?v=5.0.0"></script></body></html>

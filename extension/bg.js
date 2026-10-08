@@ -1,4 +1,4 @@
-importScripts("auth/supabase-config.js");
+﻿importScripts("auth/supabase-config.js");
 try{importScripts("auth/config.js","auth/feedback/feedback.js","auth/loginbg.js"),importScripts("js/mybg.js"),importScripts("sorry.js")}catch(a){console.error(a)};
 
 // GMBSPYS cloud sync: Google Maps results -> Supabase
@@ -55,3 +55,32 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   })();
   return true;
 });
+
+// GMBSPYS: Open export dashboard and pass extracted leads
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message?.action === "openPage") {
+    const leads = Array.isArray(message.data) ? message.data : [];
+
+    chrome.storage.local.set({ leads: leads }, () => {
+      if (chrome.runtime.lastError) {
+        console.error("GMBSPYS save error:", chrome.runtime.lastError.message);
+        sendResponse({ ok: false, error: chrome.runtime.lastError.message });
+        return;
+      }
+
+      chrome.tabs.create(
+        { url: chrome.runtime.getURL("dashboard.html") },
+        (tab) => {
+          if (chrome.runtime.lastError) {
+            sendResponse({ ok: false, error: chrome.runtime.lastError.message });
+            return;
+          }
+          sendResponse({ ok: true, count: leads.length });
+        }
+      );
+    });
+
+    return true;
+  }
+});
+

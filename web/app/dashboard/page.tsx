@@ -1,3 +1,32 @@
-"use client";
-import Link from "next/link"; import {useEffect,useState} from "react"; import {supabase} from "../../lib/supabase";
-export default function Dashboard(){const [counts,setCounts]=useState({businesses:0,leads:0,searches:0});const [status,setStatus]=useState("Loading workspace…");useEffect(()=>{(async()=>{try{const results=await Promise.all([supabase.from("businesses").select("id",{count:"exact",head:true}),supabase.from("leads").select("id",{count:"exact",head:true}),supabase.from("searches").select("id",{count:"exact",head:true})]);const err=results.find(r=>r.error)?.error;if(err){setStatus("Database connection needs attention: "+err.message);return}setCounts({businesses:results[0].count||0,leads:results[1].count||0,searches:results[2].count||0});setStatus("Live counts from the connected Supabase database.")}catch(e){setStatus("Could not load live counts. Check your Supabase environment variables.")}})()},[]);return <div className="app-shell"><aside className="sidebar"><Link className="brand" href="/"><span className="brandmark">G</span> GMBSPYS</Link><div className="side-label">Workspace</div><nav><Link className="side-link active" href="/dashboard">▦ Dashboard</Link><Link className="side-link" href="/businesses">▤ Businesses</Link><Link className="side-link" href="/leads">◎ Leads</Link><Link className="side-link" href="/searches">⌕ Searches</Link><Link className="side-link" href="/settings">⚙ Settings</Link></nav><div className="side-label">Manage</div><Link className="side-link" href="/admin">♙ Admin panel</Link><div style={{marginTop:"auto",padding:12,color:"#98a2b3",fontSize:12}}>GMBSPYS workspace</div></aside><main className="app-main"><div className="page-head"><div><h1>Dashboard</h1><p>Find businesses. Organize opportunities. Follow up clearly.</p></div><Link className="btn" href="/businesses">View businesses →</Link></div><div className="stat-grid">{[["Businesses",counts.businesses,"#4285f4"],["Leads",counts.leads,"#34a853"],["Searches",counts.searches,"#fbbc05"],["Connection","Live","#ea4335"]].map(([label,value,color])=><div className="stat-card" key={String(label)}><small><span className="dot" style={{background:String(color)}}/>{label}</small><strong>{value}</strong></div>)}</div><div className="panel"><h2>Workspace status</h2><p>{status}</p><div className="notice">Counts reflect database visibility for the configured public client. Before production, enable and verify Supabase Row Level Security (RLS) and ensure each user can only access authorized records.</div></div><div className="featuregrid"><Link className="feature" href="/businesses"><div className="feature-icon">▤</div><h3>Browse businesses</h3><p>Search business records and review contact details.</p></Link><Link className="feature" href="/leads"><div className="feature-icon">◎</div><h3>Manage leads</h3><p>Review lead statuses and associated business records.</p></Link><Link className="feature" href="/searches"><div className="feature-icon">⌕</div><h3>Search history</h3><p>Inspect saved searches and their result counts.</p></Link></div></main></div>}
+﻿const modules = [
+  { title: "Google Maps Scraper", desc: "Search jobs, scrape history and collected business leads.", href: "/searches" },
+  { title: "Lead Management", desc: "Review, qualify and manage your lead pipeline.", href: "/leads" },
+  { title: "Business CRM", desc: "Business records, customers and workspace management.", href: "/businesses" },
+  { title: "Analytics", desc: "Open the current dashboard and review available metrics.", href: "/admin" },
+  { title: "Workspace Settings", desc: "Review current application settings.", href: "/settings" },
+  { title: "Legacy CRM", desc: "Existing PHP source is preserved in legacy-crm for staged API migration.", href: "/guides/getting-started" },
+];
+
+export default function DashboardPage() {
+  return (
+    <main style={{maxWidth: 1180, margin: "0 auto", padding: "40px 24px"}}>
+      <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", gap:16, flexWrap:"wrap"}}>
+        <div>
+          <p style={{fontSize:12, letterSpacing:2, textTransform:"uppercase", opacity:.7}}>GMBSPYS · WORKSPACE</p>
+          <h1 style={{fontSize:36, fontWeight:750, margin:"8px 0"}}>Unified Business Dashboard</h1>
+          <p style={{opacity:.75, maxWidth:720}}>Scraper, leads and CRM modules in one workspace. Connect authentication, tenant policies and live APIs before production use.</p>
+        </div>
+        <a href="/" style={{padding:"10px 16px", border:"1px solid #8886", borderRadius:10, textDecoration:"none"}}>View website ↗</a>
+      </div>
+      <div style={{display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(245px,1fr))", gap:16, marginTop:32}}>
+        {modules.map((item) => (
+          <a key={item.title} href={item.href} style={{display:"block", padding:22, border:"1px solid #8883", borderRadius:16, textDecoration:"none", color:"inherit", minHeight:130}}>
+            <h2 style={{fontSize:19, fontWeight:700, margin:"0 0 10px"}}>{item.title} ↗</h2>
+            <p style={{fontSize:14, lineHeight:1.6, opacity:.75, margin:0}}>{item.desc}</p>
+          </a>
+        ))}
+      </div>
+      <p style={{marginTop:28, fontSize:13, opacity:.7}}>Integration foundation only: existing scraper behavior and PHP CRM endpoints have not yet been migrated by this page.</p>
+    </main>
+  );
+}

@@ -1,0 +1,7 @@
+<?php
+require_once __DIR__ . '/../bootstrap.php';require_method('POST');require_csrf();$u=require_auth(['super_admin']);$d=request_json();
+$title=trim((string)($d['title']??''));if($title==='')json_response(['ok'=>false,'error'=>'Title is required'],422);
+$slug=clean_slug((string)($d['slug']??$title));if($slug==='')json_response(['ok'=>false,'error'=>'Valid slug is required'],422);
+$id=(int)($d['id']??0);$status=($d['status']??'draft')==='published'?'published':'draft';$published=$status==='published'?date('Y-m-d H:i:s'):null;
+if($id){$st=db()->prepare("UPDATE blog_posts SET title=?,slug=?,category=?,excerpt=?,content=?,cover_image=?,status=?,published_at=IF(?='published',COALESCE(published_at,NOW()),NULL) WHERE id=?");$st->execute([$title,$slug,trim((string)($d['category']??'Growth')),trim((string)($d['excerpt']??'')),trim((string)($d['content']??'')),trim((string)($d['cover_image']??''))?:null,$status,$status,$id]);}else{$st=db()->prepare("INSERT INTO blog_posts(title,slug,category,excerpt,content,cover_image,status,published_at) VALUES(?,?,?,?,?,?,?,?)");$st->execute([$title,$slug,trim((string)($d['category']??'Growth')),trim((string)($d['excerpt']??'')),trim((string)($d['content']??'')),trim((string)($d['cover_image']??''))?:null,$status,$published]);$id=(int)db()->lastInsertId();}
+audit((int)$u['id'],null,'blog_saved',['blog_id'=>$id,'status'=>$status]);json_response(['ok'=>true,'id'=>$id]);
